@@ -1,3 +1,6 @@
+import { chooseAction } from "./actions.js";
+import { gameState } from "../../DS/game_state.js";
+
 const isValidRequest = (hand, good, count) => {
   const minimum = "opl".includes(good) ? 1 : 2;
   return count >= minimum && hand.filter((x) => x === good).length >= count;
@@ -25,10 +28,11 @@ export const sellGoods = (
   const count = parseInt(prompt("Enter the number of good"));
   if (!isValidRequest(player.hand, good, count)) {
     console.log("invalid input, Try again");
-    return sellGoods(player, goods, bonus);
+    const action = chooseAction();
+    return action(player, gameState);
   }
   RemoveGoods(player.hand, good, count);
-  player.goodsCoins.push(...goods[good].splice(0, count));
+  player.goodsCoins.push(...goods[good].coins.splice(0, count));
   getBonus(bonus, count, player.bonusTokens);
   console.log(`successfully sold`);
 };
