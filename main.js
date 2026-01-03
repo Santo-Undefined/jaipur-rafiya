@@ -1,11 +1,11 @@
-import { setUpGame } from "./src/gameStart.js";
-import { runGame } from "./src/runGame.js";
-import { gameData } from "./src/game_data.js";
+import { setUpGame } from "./src/game_setup.js";
+import { runGame } from "./src/game_start.js";
+import { gameState } from "./DS/game_state.js";
 
 const main = () => {
   console.log("welcome to Jaipur Market");
-  setUpGame(gameData);
-  runGame(gameData);
+  setUpGame(gameState);
+  runGame(gameState);
   return 1;
 };
 

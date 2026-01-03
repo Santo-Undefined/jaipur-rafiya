@@ -1,5 +1,5 @@
-import { chooseAction, fillMarket } from "./market_actions/general.js";
-import { displayMarket, displayPlayer } from "./display/display.js";
+import { chooseAction, fillMarket } from "./player_actions/general.js";
+import { displayMarket, displayPlayer } from "./display_market_and_player.js";
 
 export const runGame = (gameState) => {
   let currentPlayer = 0;
