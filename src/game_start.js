@@ -9,13 +9,13 @@ export const runGame = (gameState) => {
 
   while (!isGameEnded(gameState.deck, gameState.goods)) {
     const player = gameState.players[currentPlayer];
-    display(gameState, player);
+    display(gameState.market, player);
 
     const action = chooseAction();
     action(player, gameState);
 
     fillMarket(gameState);
-    
+
     prompt("Go to next player, press enter");
     currentPlayer = 1 - currentPlayer;
   }
