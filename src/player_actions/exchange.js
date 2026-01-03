@@ -27,7 +27,7 @@ const swapCards = (temp, marketCards, market, player) => {
 };
 
 const isEnoughAvailableCards = (market, playerCards) => {
-  const differentFromPlayerCardsInMarket = withoutAll(market, playerCards);
+  const differentFromPlayerCardsInMarket = withoutAll(market, [...playerCards,"m"]);
   return (differentFromPlayerCardsInMarket.length >= playerCards.length);
 };
 
@@ -39,17 +39,14 @@ const wilGoodslBecomeMoreThan7 = (hand, playerCards) => {
   return hand.length + camelCountInPlayerCards > 7;
 };
 
-const isExchangePossible = (market, hand, playerCards) => {
-  if (!isEnoughAvailableCards(market, playerCards)) {
-    console.log("There are not enough available cards to exchange from market");
-    return false;
-  }
-  if (wilGoodslBecomeMoreThan7(hand, playerCards)) {
-    console.log("After exchange your goods count will become more than 7!!!");
-    return false;
-  }
-  return true;
-};
+// const isExchangePossible = (market, hand, playerCards) => {
+//   if (!isEnoughAvailableCards(market, playerCards)) {
+//     console.log("There are not enough available cards to exchange from market");
+//     return false;
+//   }
+
+//   return true;
+// };
 
 const frequency = (table, key) => {
   let index = table.findIndex((pair) => pair[0] === key);
@@ -75,6 +72,16 @@ const areValidPlayerCards = (playerCards, hand, herd) => {
     return false;
   }
 
+  if (wilGoodslBecomeMoreThan7(hand, playerCards)) {
+    console.log("After exchange your goods count will become more than 7!!!");
+    return false;
+  }
+
+  if (!isEnoughAvailableCards(market, playerCards)) {
+    console.log("There are not enough available cards to exchange from market");
+    return false;
+  }
+
   const merged = [];
   merged.push(...herd, ...hand);
 
@@ -95,10 +102,6 @@ const getPlayerCards = (market, hand, herd) => {
   if (!areValidPlayerCards(playerCards, hand, herd)) {
     return getPlayerCards(market, hand, herd);
   }
-
-  if (!isExchangePossible(market, hand, playerCards)) {
-    return getPlayerCards(market, hand, herd);
-  }
   return playerCards;
 };
 
@@ -106,6 +109,11 @@ const doIntersect = (marketCards, playerCards) =>
   marketCards.some((card) => playerCards.includes(card));
 
 const areValidMarketCards = (market, marketCards, playerCards) => {
+  if(marketCards.includes("m")) {
+    console.log("You can't exchange camel from market");
+    return false;
+  }
+
   if (marketCards.length !== playerCards.length) {
     console.log("Please enter equal number of cards!!!");
     return false;
@@ -142,6 +150,12 @@ const getMarketCards = (market, playerCards, hand, herd) => {
 
 export const exchange = (player, gameState) => {
   const market = gameState.market;
+
+  if(withoutAll(market,["m"]).length < 2) {
+    console.log("There are less than 2 goods cards\nExchange is not possible!!!");
+    const action = chooseAction();
+    return action(player, gameState);
+  }
 
   const playerCard = getPlayerCards(market, player.hand, player.herd);
   const [playerCards, marketCards] = getMarketCards(
