@@ -1,3 +1,5 @@
+import { chooseAction } from "./actions.js";
+
 const takeFromMarket = (market, item) => {
   if (item === "m") {
     const camels = [];
@@ -20,7 +22,7 @@ const giveToPlayer = (player, good) => {
 export const take = (player, gameState) => {
   if (player.hand.length > 6) {
     console.log("Your hand is full, try exchange or sell");
-    return;
+    return chooseAction();
   }
   const item = prompt("Select good to take from market");
   if (!gameState.market.includes(item)) {
