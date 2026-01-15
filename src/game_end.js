@@ -7,40 +7,61 @@ export const are3CoinColorsFinished = (goods) => {
     (count, { coins }) => (!coins.length) ? ++count : count,
     0,
   );
-  console.log(emptyCoins);
 
   return emptyCoins >= 3;
 };
 
-export const assignCamelToken = (players) => {
-  const playerWithMoreCamels = players[0].herd.length > players[1].herd.length
-    ? 0
-    : 1;
+export const assignCamelToken = ([player1, player2]) => {
+  if (player1.herd.length === player2.herd.length) {
+    return;
+  }
+  const playerWithMoreCamels = player1.herd.length > player2.herd.length
+    ? player1
+    : player2;
 
-  players[playerWithMoreCamels].points += 5;
+  playerWithMoreCamels.points += 5;
 };
 
 export const assignSealOfExcellence = (winner) =>
   winner.sealOfExcellenceCount++;
 
 const highScorePlayerOf = ([player1, player2]) => {
-  const player1Points = sumOf([...player1.goodsCoins, ...player1.bonusCoins], x => x)
-  const player2Points = sumOf([...player2.goodsCoins, ...player2.bonusCoins], x => x)
-  return player1Points > player2Points ? player1 : player2;
-}
+  const player1Points = sumOf(
+    [...player1.goodsCoins, ...player1.bonusCoins],
+    (x) => x,
+  );
+  const player2Points = sumOf(
+    [...player2.goodsCoins, ...player2.bonusCoins],
+    (x) => x,
+  );
 
-const displayMessage = (winner) => {
-  const message =
-    `Hurray!!!!${winner.name}, you WON.\n with score ${winner.points}`;
+  if (player1Points === player2Points) {
+    if (player1.bonusCoins.length === player2.bonusCoins.length) return;
+
+    return player1.bonusCoins.length > player2.bonusCoins.length
+      ? player1
+      : player2;
+  }
+  return player1Points > player2Points ? player1 : player2;
+};
+
+const displayMessage = (message) => {
   console.log(message);
 };
 
 export const winnerAmong = (players) => {
   assignCamelToken(gameState.players);
   const winner = highScorePlayerOf(players);
+
+  if (!winner) {
+    displayMessage(`TIE!!!, no one won.`);
+    return;
+  }
   assignSealOfExcellence(winner);
 
-  displayMessage(winner);
+  displayMessage(
+    `Hurray!!!!${winner.name}, you WON.\n with score ${winner.points}`,
+  );
 };
 
 export const isGameEnded = (deck, goods) =>
