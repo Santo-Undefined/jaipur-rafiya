@@ -27,6 +27,10 @@ export const take = (player, gameState) => {
     return;
   }
   const item = prompt("Select good to take from market");
+  if (item.length > 1) {
+    console.log("enter only one item");
+    return take(player, gameState);
+  }
   if (!gameState.market.includes(item)) {
     console.log("enter goods available in market");
     return take(player, gameState);
